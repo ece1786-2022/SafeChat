@@ -1,0 +1,4 @@
+requests
+Flask
+flask-wtf
+pandas
