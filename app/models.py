@@ -39,7 +39,7 @@ class Classification:
         self.prompt = prompt.strip()
 
     def ask(self, input_text: str):
-        prompt_text = f"{self.prompt}\n\n{self.inputstart}:{input_text}\n{self.outputstart}: "
+        prompt_text = f"{self.prompt}\n\n{self.inputstart}: {input_text}\n{self.outputstart}: "
         response = openai.Completion.create(
             prompt=prompt_text,
             stop=[" {}:".format(self.outputstart)],
@@ -57,7 +57,3 @@ class Classification:
     
     def _compute_prob(self, logprob: float) -> Tuple[float, float]:
         return 100*np.e**logprob
-
-                
-
-

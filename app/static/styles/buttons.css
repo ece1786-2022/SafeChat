@@ -28,3 +28,12 @@
     filter: brightness(110%);
     -webkit-filter: brightness(110%);
 }
+
+.collapse-icon-btn {
+    cursor: pointer;
+}
+
+.collapse-icon-btn:hover {
+    filter: brightness(110%);
+    -webkit-filter: brightness(110%);
+}

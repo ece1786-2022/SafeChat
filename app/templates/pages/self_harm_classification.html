@@ -25,21 +25,36 @@ Self-Harm Classification
         {{ form.hidden_tag() }}
         <div class="col-sm-6">
             <div class="card">
-                <div class="card-header d-flex gap-1" style="background: var(--card-head-background);">
-                    <button class="choice-btn active d-flex align-items-center justify-content-center p-2 rounded-3">
-                        <h5 class="m-0 fs-6">Zero-shot</h5>
-                    </button>
-                    <button class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3">
-                        <h5 class="m-0 fs-6">One/Few-shot</h5>
-                    </button>
-                    <button class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3">
-                        <h5 class="m-0 fs-6">Fine-tune</h5>
-                    </button>
-                    {{form.model(hidden='true', id='form-model')}}
+                <div class="card-header d-flex" style="background: var(--card-head-background);">
+                    <div class="d-flex gap-1">
+                        <button type="button" class="choice-btn active d-flex align-items-center justify-content-center p-2 rounded-3" id="zero-shot">
+                            <h5 class="m-0 fs-6">Zero-shot</h5>
+                        </button>
+                        <button type="button" class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3" id="few-shot">
+                            <h5 class="m-0 fs-6">One/Few-shot</h5>
+                        </button>
+                        <button type="button" class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3" id="fine-tune">
+                            <h5 class="m-0 fs-6">Fine-tune</h5>
+                        </button>
+                        {{form.model(hidden='true', id='form-model')}}
+                    </div>
+
+                    <div class="dropdown ms-auto">
+                        <div class="dropdown-toggle p-2 text-center" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--choice-btn-color);">
+                            GPT-3
+                        </div>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><div class="dropdown-item active">GPT-3</div></li>
+                            <li><div class="dropdown-item">GPT-2</div></li>
+                        </ul>
+                    </div>
                 </div>
                 <div class="card-body" style="background: var(--card-body-background);">
-                    <h5 class="card-title">Parameter Configurations</h5>
-                    <div class="card-text">
+                    <div class="d-flex">
+                        <h5 class="card-title">Parameter Configurations</h5>
+                        <h5 class="ms-auto collapse-icon-btn fs-5" data-bs-toggle="collapse" data-bs-target="#parameter-config" aria-expanded="false" aria-controls="parameter-config"><i class="bi bi-chevron-down"></i></h5>
+                    </div>
+                    <div class="card-text collapse" id="parameter-config">
                         <div class="mb-2">
                             <div class="d-flex align-items-center justify-content-between w-100" >
                                 <label for="temperature" class="form-label">Temperature</label>
@@ -95,13 +110,43 @@ Self-Harm Classification
                         </div>
                     </div>
 
-                    <h5 class="card-title">Prompt Designs</h5>
-                    <div class="card-text">
-                        <div class="input-group">
+                    <hr class="dropdown-divider">
+                    <div class="d-flex">
+                        <h5 class="card-title">Prompt Designs</h5>
+                        <h5 class="ms-auto collapse-icon-btn fs-5" data-bs-toggle="collapse" data-bs-target="#prompt-design" aria-expanded="false" aria-controls="prompt-design"><i class="bi bi-chevron-down"></i></h5>
+                    </div>
+                    <div class="card-text collapse" id="prompt-design">
+                        <div class="input-group mb-2">
                             <span class="input-group-text">Prompt</span>
                             <textarea class="form-control" aria-label="Prompt" id="prompt" rows="6"></textarea>
                             {{form.prompt(hidden='true', id='form-prompt')}}
                         </div>
+
+                        <div class="d-flex flex-column d-none" id="example-collection">
+                            <div class="card mb-2" aria-label="example">
+                                <div class="card-body">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <h6 class="card-subtitle text-muted">Example</h6>
+                                    </div>
+                                    <div class="input-group mb-2">
+                                        <span class="input-group-text">Input</span>
+                                        <textarea class="form-control" aria-label="example-input"></textarea>
+                                    </div>
+    
+                                    <div class="input-group">
+                                        <span class="input-group-text">Label</span>
+                                        <select class="form-select" aria-label="example-label">
+                                            <option value="suicide" selected>suicide</option>
+                                            <option value="non-suicide">non-suicide</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <button type="button" id="add-example" class="panel-btn d-flex w-100 align-items-center justify-content-center p-2 rounded-3 d-none">
+                            <h5 class="m-0 fs-5">Add Example</h5>
+                        </button>
                     </div>
                 </div>
                 <div class="card-footer text-center" style="background: var(--card-head-background); color: var(--choice-btn-color);">
@@ -163,6 +208,9 @@ Self-Harm Classification
         this.formPrompt = document.getElementById(`form-prompt`),
         this.formInputText = document.getElementById(`form-input-text`),
         this.formSubmit = document.getElementById(`form-submit`),
+        this.zeroShotBtn = document.getElementById(`zero-shot`),
+        this.fewShotBtn = document.getElementById(`few-shot`),
+        this.fineTuneBtn = document.getElementById(`fine-tune`),
         this.rangeTemperature = document.getElementById(`temperature`),
         this.numberTemperature = document.getElementById(`temperature-number`),
         this.rangeMaxLength = document.getElementById(`max-length`),
@@ -178,13 +226,16 @@ Self-Harm Classification
         this.prompt = document.getElementById(`prompt`),
         this.inputText = document.getElementById(`input-text`),
         this.outputLabel = document.getElementById(`output-label`),
-        this.predictSubmit = document.getElementById(`predict-submit`)
+        this.predictSubmit = document.getElementById(`predict-submit`),
+        this.addExampleBtn = document.getElementById(`add-example`),
+        this.exampleCollection = document.getElementById(`example-collection`),
+        this.addExampleBtn = document.getElementById(`add-example`)
     };
 
     Classifier.prototype = {
         ini: function() {
-            this._prepareFrontEnd();
             this._prepareAPI();
+            this._prepareFrontEnd();
             this._addEventListner();
         },
         _prepareFrontEnd: function() {
@@ -195,6 +246,15 @@ Self-Harm Classification
             this.rangePresencePenalty.value = this.numberPresencePenalty.value = this.formPresencePenalty.value;
             this.rangeBestOf.value = this.numberBestOf.value = this.formBestOf.value;
             this.prompt.innerHTML = this.formPrompt.value;
+
+            if (this.formModel.value === "Zero-shot") {
+                this.switchToZeroShot();
+            } else if (this.formModel.value === "One/Few-shot") {
+                this.switchToFewShot();
+                this.captureExamples();
+            } else {
+                this.switchToFineTune();
+            }
         },
         _prepareAPI: function() {
             var that = this;
@@ -206,6 +266,87 @@ Self-Harm Classification
                     item.value = curr.value;
                 });
             }
+
+            this.captureExamples = function() {
+                const regex = /^(?<text>.*)\n(\[ANSWER\]: )(?<answer>.*)/;
+                const examples = that.prompt.value.split("\n\n[TEXT]: ");
+
+                let exampleCount = 0;
+
+                examples.forEach(example => {
+                    const match = example.match(regex);
+
+                    console.log(`match: ${match}`);
+    
+                    if (match == null) return;
+    
+                    const { text, answer } = match.groups;
+    
+                    console.log(`text : ${text}`);
+                    console.log(`answer : ${answer}`);
+
+                    if (exampleCount === 0) {
+                        that.exampleCollection.querySelector(`[aria-label="example-input"]`).value = text;
+                        that.exampleCollection.querySelector(`[aria-label="example-label"]`).value = answer;
+                    } else {
+                        let exampleEl = document.createElement('div');
+                        exampleEl.innerHTML = `{% include 'pages/includes/example.html' %}`;
+                        that.exampleCollection.appendChild(exampleEl);
+
+                        exampleEl.querySelector(`[aria-label="example-input"]`).value = text;
+                        exampleEl.querySelector(`[aria-label="example-label"]`).value = answer;
+                    }
+
+                    exampleCount += 1;
+                });
+
+                that.formPrompt.value = that.prompt.value = examples[0];
+            }
+
+            this.switchToZeroShot = function() {
+                that.zeroShotBtn.classList.add("active");
+                that.fewShotBtn.classList.remove("active");
+                that.fineTuneBtn.classList.remove("active");
+
+                that.exampleCollection.classList.add("d-none");
+                that.addExampleBtn.classList.add("d-none");
+
+                that.formModel.value = "Zero-shot";
+            }
+
+            this.switchToFewShot = function() {
+                that.zeroShotBtn.classList.remove("active");
+                that.fewShotBtn.classList.add("active");
+                that.fineTuneBtn.classList.remove("active");
+
+                that.exampleCollection.classList.remove("d-none");
+                that.addExampleBtn.classList.remove("d-none");
+
+                that.formModel.value = "One/Few-shot";
+            }
+
+            this.switchToFineTune = function() {
+                that.zeroShotBtn.classList.remove("active");
+                that.fewShotBtn.classList.remove("active");
+                that.fineTuneBtn.classList.add("active");
+
+                that.exampleCollection.classList.add("d-none");
+                that.addExampleBtn.classList.add("d-none");
+
+                that.formModel.value = "Fine-tune";
+            }
+
+            this.onReady = (target, selector, event, callback) => {
+                let clickables = [...target.querySelectorAll(selector)];
+
+                let clickObserver = function(nodeID) {
+                    callback(nodeID);
+                };
+        
+                clickables.forEach(el => {
+                    el.addEventListener(event, clickObserver.bind(el, el), true);
+                });
+            };
         },
         _addEventListner: function() {
             var that = this;
@@ -283,7 +424,57 @@ Self-Harm Classification
             this.predictSubmit.addEventListener(
                 "click",
                 function() {
+                    let promptText = that.prompt.value;
+
+                    if (that.formModel.value === "One/Few-shot") {
+                        that.exampleCollection.querySelectorAll(`[aria-label="example"]`).forEach((exampleEl) => {
+                            let exampleInputText = exampleEl.querySelector(`[aria-label="example-input"]`);
+                            let exampleInputLabel = exampleEl.querySelector(`[aria-label="example-label"]`);
+
+                            if (exampleInputText.value !== "") {
+                                let answer = `\n\n[TEXT]: ${exampleInputText.value}\n[ANSWER]: ${exampleInputLabel.value}`;
+                                promptText += answer;
+                            }
+                        });
+                    }
+
+                    that.formPrompt.value = that.prompt.value = promptText;
+
                     that.formSubmit.click();
+                }
+            )
+
+            this.zeroShotBtn.addEventListener(
+                "click",
+                function () {
+                    that.switchToZeroShot();
+                }
+            )
+
+            this.fewShotBtn.addEventListener(
+                "click",
+                function () {
+                    that.switchToFewShot();
+                }
+            )
+
+            this.fineTuneBtn.addEventListener(
+                "click",
+                function () {
+                    that.switchToFineTune();
+                }
+            )
+
+            this.addExampleBtn.addEventListener(
+                "click",
+                function() {
+                    let exampleEl = document.createElement('div');
+                    exampleEl.innerHTML = `{% include 'pages/includes/example.html' %}`;
+                    that.exampleCollection.appendChild(exampleEl);
+
+                    that.onReady(that.exampleCollection, `[aria-label="example-close"]`, "click", (el) => {
+                        that.exampleCollection.removeChild(el.parentElement.parentElement.parentElement.parentElement);
+                    });
                 }
             )
         }
