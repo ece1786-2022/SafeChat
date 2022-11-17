@@ -40,6 +40,12 @@ SafeChat
 
 {% block js_files %}
 <script>
-
+    document.getElementById("shc-page-btn").onclick = function() {
+        location.href = `{{ url_for('self_harm_classification') }}`;
+    }
+</script>
+<script>
+    var curr_id = document.getElementById("page-id").innerHTML;
+    console.log(curr_id);
 </script>
 {% endblock js_files %}

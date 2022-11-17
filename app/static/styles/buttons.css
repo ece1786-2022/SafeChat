@@ -9,3 +9,22 @@
     filter: brightness(110%);
     -webkit-filter: brightness(110%);
 }
+
+.choice-btn.active {
+    background: var(--choice-btn-background); 
+    color: var(--choice-btn-color); 
+    border: none; 
+    box-shadow: none;
+}
+
+.choice-btn {
+    background: var(--card-head-background); 
+    color: var(--choice-btn-color); 
+    border: none; 
+    box-shadow: none;
+}
+
+.choice-btn:hover {
+    filter: brightness(110%);
+    -webkit-filter: brightness(110%);
+}

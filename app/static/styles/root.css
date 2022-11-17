@@ -1,15 +1,19 @@
 :root {
     --body-background: #e6f0f4;
     --nav-background: #2F5061;
-    --breadcrumb-background: #4297A0;
+    --breadcrumb-background: #61a6ad;
     --btn-background: #F7DACE;
     --icon-background: #F7DACE;
-    --panel-background: #4297A0;
+    --panel-background: #61a6ad;
     --panel-btn-background: #2F5061;
     --key-table-head-background: #2F5061;
+    --choice-btn-background: #EB7847;
+    --card-body-background: #E7F6FC;
+    --card-head-background: #61a6ad;
     --icon-color: #E57F84;
     --body-color: #2F5061;
     --nav-color: #e6f0f4;
     --panel-btn-color: #e6f0f4;
     --key-table-head-color: #e6f0f4;
+    --choice-btn-color: #e6f0f4;
 }

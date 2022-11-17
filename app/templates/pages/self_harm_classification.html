@@ -1,0 +1,296 @@
+{% extends '_base.html' %}
+
+{% block title %}
+Self-Harm Classification
+{% endblock title %}
+
+{% block css_files %}
+
+{% endblock css_files %}
+
+{% block contents %}
+
+{% include 'pages/includes/navbar.html' %}
+
+{% include 'pages/includes/breadcrumb.html' %}
+
+<div class="container" style="height: 80vh; width: 90vw;">
+    <div class="d-flex flex-column w-100 gap-3 mt-3 mb-3">
+
+        <h5 id="page-id" class="m-0 fs-3">Self-Harm Classification</h5>
+        <span class="m-0 fs-5 text-muted">Classify whether a given message has self-harm related contents.</span>
+    </div>
+
+    <form class="row gy-3" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }}
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-header d-flex gap-1" style="background: var(--card-head-background);">
+                    <button class="choice-btn active d-flex align-items-center justify-content-center p-2 rounded-3">
+                        <h5 class="m-0 fs-6">Zero-shot</h5>
+                    </button>
+                    <button class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3">
+                        <h5 class="m-0 fs-6">One/Few-shot</h5>
+                    </button>
+                    <button class="choice-btn d-flex align-items-center justify-content-center p-2 rounded-3">
+                        <h5 class="m-0 fs-6">Fine-tune</h5>
+                    </button>
+                    {{form.model(hidden='true', id='form-model')}}
+                </div>
+                <div class="card-body" style="background: var(--card-body-background);">
+                    <h5 class="card-title">Parameter Configurations</h5>
+                    <div class="card-text">
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="temperature" class="form-label">Temperature</label>
+                                <input type="number" class="form-control" aria-label="temperature-number" id="temperature-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="temperature" value="" min="0" max="1" step="0.01">
+                            {{form.temperature(hidden='true', id='form-temperature')}}
+                        </div>
+                          
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="max-length" class="form-label">Maximum length</label>
+                                <input type="number" class="form-control" aria-label="max-length-number" id="max-length-number" value="" min="6" max="2048" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="max-length" value="" min="6" max="2048">
+                            {{form.max_length(hidden='true', id='form-max-length')}}
+                        </div>
+                          
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="top-p" class="form-label">Top P</label>
+                                <input type="number" class="form-control" aria-label="top-p-number" id="top-p-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="top-p" value="" min="0" max="1" step="0.01">
+                            {{form.top_p(hidden='true', id='form-top-p')}}
+                        </div>
+                          
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="frequency-penalty" class="form-label">Frequency penalty</label>
+                                <input type="number" class="form-control" aria-label="frequency-penalty-number" id="frequency-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="frequency-penalty" value="" min="0" max="1" step="0.01">
+                            {{form.frequency_penalty(hidden='true', id='form-frequency-penalty')}}
+                        </div>
+                          
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="presence-penalty" class="form-label">Presence penalty</label>
+                                <input type="number" class="form-control" aria-label="presence-penalty-number" id="presence-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="presence-penalty" value="" min="0" max="1" step="0.01">
+                            {{form.presence_penalty(hidden='true', id='form-presence-penalty')}}
+                        </div>
+
+                        <div class="mb-2">
+                            <div class="d-flex align-items-center justify-content-between w-100" >
+                                <label for="best-of" class="form-label">Best of</label>
+                                <input type="number" class="form-control" aria-label="best-of-number" id="best-of-number" value="" min="1" max="20" style="max-width: 80px;">
+                            </div>
+                            <input type="range" class="form-range" id="best-of" value="" min="1" max="20">
+                            {{form.best_of(hidden='true', id='form-best-of')}}
+                        </div>
+                    </div>
+
+                    <h5 class="card-title">Prompt Designs</h5>
+                    <div class="card-text">
+                        <div class="input-group">
+                            <span class="input-group-text">Prompt</span>
+                            <textarea class="form-control" aria-label="Prompt" id="prompt" rows="6"></textarea>
+                            {{form.prompt(hidden='true', id='form-prompt')}}
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer text-center" style="background: var(--card-head-background); color: var(--choice-btn-color);">
+                    Model Settings
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="card">
+                <div class="card-body" style="background: var(--card-body-background);">
+                    <h5 class="card-title">Playground</h5>
+                    <p class="card-text">
+                        <div class="mb-2">
+                            <label for="input-text" class="form-label">Input text</label>
+                            <textarea type="text" class="form-control" id="input-text">{% if input_text %}{{input_text}}{% endif %}</textarea>
+                            {{form.input_text(hidden='true', id='form-input-text')}}
+                        </div>
+
+                        <div class="mb-2">
+                            <label for="output-label" class="form-label">Output label</label>
+                            <input type="text" class="form-control" id="output-label" value="{% if output_text %}{{output_text}}{% endif %}" {% if not output_text %}disabled{% endif %}>
+                        </div>
+
+                        <label for="output-prob" class="form-label">Probablity</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="output-prob" value="{% if output_prob %}{{output_prob}}{% endif %}" {% if not output_prob %}disabled{% endif %}>
+                            <span class="input-group-text" id="precentage">%</span>
+                        </div>
+                    </p>
+                    <button type="submit" id="predict-submit" class="panel-btn d-flex align-items-center justify-content-center p-2 rounded-3">
+                        <h5 class="m-0 fs-5">Predict</h5>
+                    </button>
+                    {{form.submit(hidden='true', id='form-submit')}}
+                </div>
+                <div class="card-footer text-center" style="background: var(--card-head-background); color: var(--choice-btn-color);">
+                    Classification
+                </div>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+
+
+{% endblock contents %}
+
+{% block js_files %}
+<script src="{{ url_for('static', filename='scripts/breadcrumb.js') }}"></script>
+<script>
+    var Classifier = function() {
+        this.formModel = document.getElementById(`form-model`),
+        this.formTemperature = document.getElementById(`form-temperature`),
+        this.formMaxLength = document.getElementById(`form-max-length`),
+        this.formTopP = document.getElementById(`form-top-p`),
+        this.formFrequencyPenalty = document.getElementById(`form-frequency-penalty`),
+        this.formPresencePenalty = document.getElementById(`form-presence-penalty`),
+        this.formBestOf = document.getElementById(`form-best-of`),
+        this.formPrompt = document.getElementById(`form-prompt`),
+        this.formInputText = document.getElementById(`form-input-text`),
+        this.formSubmit = document.getElementById(`form-submit`),
+        this.rangeTemperature = document.getElementById(`temperature`),
+        this.numberTemperature = document.getElementById(`temperature-number`),
+        this.rangeMaxLength = document.getElementById(`max-length`),
+        this.numberMaxLength = document.getElementById(`max-length-number`),
+        this.rangeTopP = document.getElementById(`top-p`),
+        this.numberTopP = document.getElementById(`top-p-number`),
+        this.rangeFrequencyPenalty = document.getElementById(`frequency-penalty`),
+        this.numberFrequencyPenalty = document.getElementById(`frequency-penalty-number`),
+        this.rangePresencePenalty = document.getElementById(`presence-penalty`),
+        this.numberPresencePenalty = document.getElementById(`presence-penalty-number`),
+        this.rangeBestOf = document.getElementById(`best-of`),
+        this.numberBestOf = document.getElementById(`best-of-number`),
+        this.prompt = document.getElementById(`prompt`),
+        this.inputText = document.getElementById(`input-text`),
+        this.outputLabel = document.getElementById(`output-label`),
+        this.predictSubmit = document.getElementById(`predict-submit`)
+    };
+
+    Classifier.prototype = {
+        ini: function() {
+            this._prepareFrontEnd();
+            this._prepareAPI();
+            this._addEventListner();
+        },
+        _prepareFrontEnd: function() {
+            this.rangeTemperature.value = this.numberTemperature.value = this.formTemperature.value;
+            this.rangeMaxLength.value = this.numberMaxLength.value = this.formMaxLength.value;
+            this.rangeTopP.value = this.numberTopP.value = this.formTopP.value;
+            this.rangeFrequencyPenalty.value = this.numberFrequencyPenalty.value = this.formFrequencyPenalty.value;
+            this.rangePresencePenalty.value = this.numberPresencePenalty.value = this.formPresencePenalty.value;
+            this.rangeBestOf.value = this.numberBestOf.value = this.formBestOf.value;
+            this.prompt.innerHTML = this.formPrompt.value;
+        },
+        _prepareAPI: function() {
+            var that = this;
+
+            this.syncValueChange = function(items) {
+                let curr = this;
+
+                items.forEach(item => {
+                    item.value = curr.value;
+                });
+            }
+        },
+        _addEventListner: function() {
+            var that = this;
+
+            this.rangeTemperature.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeTemperature, [that.numberTemperature, that.formTemperature])
+            );
+
+            this.numberTemperature.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberTemperature, [that.rangeTemperature, that.formTemperature])
+            );
+
+            this.rangeMaxLength.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeMaxLength, [that.numberMaxLength, that.formMaxLength])
+            );
+
+            this.numberMaxLength.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberMaxLength, [that.rangeMaxLength, that.formMaxLength])
+            );
+
+            this.rangeTopP.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeTopP, [that.numberTopP, that.formTopP])
+            );
+
+            this.numberTopP.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberTopP, [that.rangeTopP, that.formTopP])
+            );
+            
+            this.rangeFrequencyPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeFrequencyPenalty, [that.numberFrequencyPenalty, that.formFrequencyPenalty])
+            );
+
+            this.numberFrequencyPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberFrequencyPenalty, [that.rangeFrequencyPenalty, that.formFrequencyPenalty])
+            );
+
+            this.rangePresencePenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangePresencePenalty, [that.numberPresencePenalty, that.formPresencePenalty])
+            );
+
+            this.numberPresencePenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberPresencePenalty, [that.rangePresencePenalty, that.formPresencePenalty])
+            );
+            
+            this.rangeBestOf.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeBestOf, [that.numberBestOf, that.formBestOf])
+            );
+
+            this.numberBestOf.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberBestOf, [that.rangeBestOf, that.formBestOf])
+            );
+            
+            this.inputText.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.inputText, [that.formInputText])
+            );
+
+            this.prompt.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.prompt, [that.formPrompt])
+            );
+
+            this.predictSubmit.addEventListener(
+                "click",
+                function() {
+                    that.formSubmit.click();
+                }
+            )
+        }
+    };
+
+    window.onload = function() {
+        new Classifier().ini();
+    };
+</script>
+{% endblock js_files %}
