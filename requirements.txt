@@ -26,3 +26,5 @@ urllib3==1.26.12
 Werkzeug==2.2.2
 WTForms==3.0.1
 zipp==3.10.0
+torch==1.12.1
+transformers==4.24.0
