@@ -40,13 +40,14 @@ Self-Harm Classification
                     </div>
 
                     <div class="dropdown ms-auto">
-                        <div class="dropdown-toggle p-2 text-center" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--choice-btn-color);">
+                        <div class="dropdown-toggle p-2 text-center" id="model-type-dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: var(--choice-btn-color);">
                             GPT-3
                         </div>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><div class="dropdown-item active">GPT-3</div></li>
-                            <li><div class="dropdown-item">GPT-2</div></li>
+                        <ul class="dropdown-menu" aria-labelledby="model-type-dropdown">
+                            <li><div id="gpt-3-dropdown-item" class="dropdown-item active">GPT-3</div></li>
+                            <li><div id="gpt-2-dropdown-item" class="dropdown-item">GPT-2</div></li>
                         </ul>
+                        {{form.model_type(hidden='true', id='form-model-type')}}
                     </div>
                 </div>
                 <div class="card-body" style="background: var(--card-body-background);">
@@ -81,34 +82,82 @@ Self-Harm Classification
                             <input type="range" class="form-range" id="top-p" value="" min="0" max="1" step="0.01">
                             {{form.top_p(hidden='true', id='form-top-p')}}
                         </div>
-                          
-                        <div class="mb-2">
-                            <div class="d-flex align-items-center justify-content-between w-100" >
-                                <label for="frequency-penalty" class="form-label">Frequency penalty</label>
-                                <input type="number" class="form-control" aria-label="frequency-penalty-number" id="frequency-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                        
+                        <div id="gpt-3-parameter">
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="frequency-penalty" class="form-label">Frequency penalty</label>
+                                    <input type="number" class="form-control" aria-label="frequency-penalty-number" id="frequency-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="frequency-penalty" value="" min="0" max="1" step="0.01">
+                                
                             </div>
-                            <input type="range" class="form-range" id="frequency-penalty" value="" min="0" max="1" step="0.01">
-                            {{form.frequency_penalty(hidden='true', id='form-frequency-penalty')}}
-                        </div>
-                          
-                        <div class="mb-2">
-                            <div class="d-flex align-items-center justify-content-between w-100" >
-                                <label for="presence-penalty" class="form-label">Presence penalty</label>
-                                <input type="number" class="form-control" aria-label="presence-penalty-number" id="presence-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                              
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="presence-penalty" class="form-label">Presence penalty</label>
+                                    <input type="number" class="form-control" aria-label="presence-penalty-number" id="presence-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="presence-penalty" value="" min="0" max="1" step="0.01">
+                                
                             </div>
-                            <input type="range" class="form-range" id="presence-penalty" value="" min="0" max="1" step="0.01">
-                            {{form.presence_penalty(hidden='true', id='form-presence-penalty')}}
+    
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="best-of" class="form-label">Best of</label>
+                                    <input type="number" class="form-control" aria-label="best-of-number" id="best-of-number" value="" min="1" max="20" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="best-of" value="" min="1" max="20">
+                                
+                            </div>
                         </div>
 
-                        <div class="mb-2">
-                            <div class="d-flex align-items-center justify-content-between w-100" >
-                                <label for="best-of" class="form-label">Best of</label>
-                                <input type="number" class="form-control" aria-label="best-of-number" id="best-of-number" value="" min="1" max="20" style="max-width: 80px;">
+                        <div class="d-none" id="gpt-2-parameter">
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="num-beams" class="form-label">Number of beams</label>
+                                    <input type="number" class="form-control" aria-label="num-beams-number" id="num-beams-number" value="" min="1" max="99" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="num-beams" value="" min="1" max="99">
+                                
                             </div>
-                            <input type="range" class="form-range" id="best-of" value="" min="1" max="20">
-                            {{form.best_of(hidden='true', id='form-best-of')}}
+
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="diversity-penalty" class="form-label">Diversity penalty</label>
+                                    <input type="number" class="form-control" aria-label="diversity-penalty-number" id="diversity-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="diversity-penalty" value="" min="0" max="1" step="0.01">
+                                
+                            </div>
+                              
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="repetition-penalty" class="form-label">Repetition penalty</label>
+                                    <input type="number" class="form-control" aria-label="repetition-penalty-number" id="repetition-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="repetition-penalty" value="" min="0" max="1" step="0.01">
+                                
+                            </div>
+    
+                            <div class="mb-2">
+                                <div class="d-flex align-items-center justify-content-between w-100" >
+                                    <label for="length-penalty" class="form-label">Length penalty</label>
+                                    <input type="number" class="form-control" aria-label="length-penalty-number" id="length-penalty-number" value="" min="0" max="1" step="0.01" style="max-width: 80px;">
+                                </div>
+                                <input type="range" class="form-range" id="length-penalty" value="" min="0" max="1" step="0.01">
+                                
+                            </div>
                         </div>
                     </div>
+
+                    {{form.frequency_penalty(hidden='true', id='form-frequency-penalty')}}
+                    {{form.presence_penalty(hidden='true', id='form-presence-penalty')}}
+                    {{form.best_of(hidden='true', id='form-best-of')}}
+                    {{form.num_beams(hidden='true', id='form-num-beams')}}
+                    {{form.diversity_penalty(hidden='true', id='form-diversity-penalty')}}
+                    {{form.repetition_penalty(hidden='true', id='form-repetition-penalty')}}
+                    {{form.length_penalty(hidden='true', id='form-length-penalty')}}
 
                     <hr class="dropdown-divider">
                     <div class="d-flex">
@@ -199,6 +248,7 @@ Self-Harm Classification
 <script>
     var Classifier = function() {
         this.formModel = document.getElementById(`form-model`),
+        this.formModelType = document.getElementById(`form-model-type`),
         this.formTemperature = document.getElementById(`form-temperature`),
         this.formMaxLength = document.getElementById(`form-max-length`),
         this.formTopP = document.getElementById(`form-top-p`),
@@ -207,6 +257,10 @@ Self-Harm Classification
         this.formBestOf = document.getElementById(`form-best-of`),
         this.formPrompt = document.getElementById(`form-prompt`),
         this.formInputText = document.getElementById(`form-input-text`),
+        this.formNumBeams = document.getElementById(`form-num-beams`),
+        this.formDiversityPenalty = document.getElementById(`form-diversity-penalty`),
+        this.formRepetitionPenalty = document.getElementById(`form-repetition-penalty`),
+        this.formLengthPenalty = document.getElementById(`form-length-penalty`),
         this.formSubmit = document.getElementById(`form-submit`),
         this.zeroShotBtn = document.getElementById(`zero-shot`),
         this.fewShotBtn = document.getElementById(`few-shot`),
@@ -223,6 +277,17 @@ Self-Harm Classification
         this.numberPresencePenalty = document.getElementById(`presence-penalty-number`),
         this.rangeBestOf = document.getElementById(`best-of`),
         this.numberBestOf = document.getElementById(`best-of-number`),
+        this.rangeNumBeams = document.getElementById(`num-beams`),
+        this.numberNumBeams = document.getElementById(`num-beams-number`),
+        this.rangeDiversityPenalty = document.getElementById(`diversity-penalty`),
+        this.numberDiversityPenalty = document.getElementById(`diversity-penalty-number`),
+        this.rangeRepetitionPenalty = document.getElementById(`repetition-penalty`),
+        this.numberRepetitionPenalty = document.getElementById(`repetition-penalty-number`),
+        this.rangeLengthPenalty = document.getElementById(`length-penalty`),
+        this.numberLengthPenalty = document.getElementById(`length-penalty-number`),
+        this.modelTypeDropdown = document.getElementById(`model-type-dropdown`),
+        this.gpt3DropDownItem = document.getElementById(`gpt-3-dropdown-item`),
+        this.gpt2DropDownItem = document.getElementById(`gpt-2-dropdown-item`),
         this.prompt = document.getElementById(`prompt`),
         this.inputText = document.getElementById(`input-text`),
         this.outputLabel = document.getElementById(`output-label`),
@@ -242,10 +307,15 @@ Self-Harm Classification
             this.rangeTemperature.value = this.numberTemperature.value = this.formTemperature.value;
             this.rangeMaxLength.value = this.numberMaxLength.value = this.formMaxLength.value;
             this.rangeTopP.value = this.numberTopP.value = this.formTopP.value;
+            this.prompt.innerHTML = this.formPrompt.value;
+
             this.rangeFrequencyPenalty.value = this.numberFrequencyPenalty.value = this.formFrequencyPenalty.value;
             this.rangePresencePenalty.value = this.numberPresencePenalty.value = this.formPresencePenalty.value;
             this.rangeBestOf.value = this.numberBestOf.value = this.formBestOf.value;
-            this.prompt.innerHTML = this.formPrompt.value;
+            this.rangeNumBeams.value = this.numberNumBeams.value = this.formNumBeams.value;
+            this.rangeDiversityPenalty.value = this.numberDiversityPenalty.value = this.formDiversityPenalty.value;
+            this.rangeRepetitionPenalty.value = this.numberRepetitionPenalty.value = this.formRepetitionPenalty.value;
+            this.rangeLengthPenalty.value = this.numberLengthPenalty.value = this.formLengthPenalty.value;
 
             if (this.formModel.value === "Zero-shot") {
                 this.switchToZeroShot();
@@ -255,9 +325,18 @@ Self-Harm Classification
             } else {
                 this.switchToFineTune();
             }
+
+            if (this.formModelType.value == "GPT-3") {
+                this.toggleDropdownToGPT3();
+            } else if (this.formModelType.value == "GPT-2") {
+                this.toggleDropdownToGPT2();
+            }
+
         },
         _prepareAPI: function() {
-            var that = this;
+            var that = this,
+                gpt3Parameter = document.getElementById(`gpt-3-parameter`),
+                gpt2Parameter = document.getElementById(`gpt-2-parameter`);
 
             this.syncValueChange = function(items) {
                 let curr = this;
@@ -265,6 +344,26 @@ Self-Harm Classification
                 items.forEach(item => {
                     item.value = curr.value;
                 });
+            }
+
+            this.toggleDropdownToGPT3 = function() {
+                that.gpt3DropDownItem.classList.add("active");
+                that.gpt2DropDownItem.classList.remove("active");
+
+                gpt3Parameter.classList.remove("d-none");
+                gpt2Parameter.classList.add("d-none");
+
+                that.modelTypeDropdown.innerHTML = "GPT-3";
+            }
+
+            this.toggleDropdownToGPT2 = function() {
+                that.gpt3DropDownItem.classList.remove("active");
+                that.gpt2DropDownItem.classList.add("active");
+
+                gpt3Parameter.classList.add("d-none");
+                gpt2Parameter.classList.remove("d-none");
+
+                that.modelTypeDropdown.innerHTML = "GPT-2";
             }
 
             this.captureExamples = function() {
@@ -410,6 +509,46 @@ Self-Harm Classification
                 "input", 
                 that.syncValueChange.bind(that.numberBestOf, [that.rangeBestOf, that.formBestOf])
             );
+
+            this.rangeDiversityPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeDiversityPenalty, [that.numberDiversityPenalty, that.formDiversityPenalty])
+            );
+
+            this.numberDiversityPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberDiversityPenalty, [that.rangeDiversityPenalty, that.formDiversityPenalty])
+            );
+
+            this.rangeRepetitionPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeRepetitionPenalty, [that.numberRepetitionPenalty, that.formRepetitionPenalty])
+            );
+
+            this.numberRepetitionPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberRepetitionPenalty, [that.rangeRepetitionPenalty, that.formRepetitionPenalty])
+            );
+
+            this.rangeLengthPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeLengthPenalty, [that.numberLengthPenalty, that.formLengthPenalty])
+            );
+
+            this.numberLengthPenalty.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberLengthPenalty, [that.rangeLengthPenalty, that.formLengthPenalty])
+            );
+
+            this.rangeNumBeams.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.rangeNumBeams, [that.numberNumBeams, that.formNumBeams])
+            );
+
+            this.numberNumBeams.addEventListener(
+                "input", 
+                that.syncValueChange.bind(that.numberNumBeams, [that.rangeNumBeams, that.formNumBeams])
+            );
             
             this.inputText.addEventListener(
                 "input", 
@@ -439,6 +578,8 @@ Self-Harm Classification
                     }
 
                     that.formPrompt.value = that.prompt.value = promptText;
+
+                    console.log(that.formModelType.value);
 
                     that.formSubmit.click();
                 }
@@ -477,10 +618,30 @@ Self-Harm Classification
                     });
                 }
             )
+
+            this.gpt3DropDownItem.addEventListener(
+                "click",
+                function() {
+                    that.toggleDropdownToGPT3();
+                    that.formModelType.value = "GPT-3";
+                }
+            )
+
+            this.gpt2DropDownItem.addEventListener(
+                "click",
+                function() {
+                    that.toggleDropdownToGPT2();
+                    that.formModelType.value = "GPT-2";
+                }
+            )
         }
     };
 
     window.onload = function() {
+        var dropdownElementList = [].slice.call(document.querySelectorAll('.dropdown-toggle'));
+        var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
+            return new bootstrap.Dropdown(dropdownToggleEl);
+        })
         new Classifier().ini();
     };
 </script>
