@@ -165,3 +165,5 @@ app/secure.py
 # Training and Valdation Datasets
 datasets/
 model_finetuning/dataset/**
+model_finetuning/final_dataset_suicide_test_huggingface.csv
+model_finetuning/final_dataset_suicide_train_huggingface.csv
