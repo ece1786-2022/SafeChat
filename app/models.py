@@ -8,6 +8,7 @@ from transformers import GPT2Tokenizer, GPT2ForSequenceClassification, GPT2Confi
 from app import webapp
 from typing import List, Dict, Tuple
 
+# NOTE: run "huggingface-cli login" in terminal or CMD to get gpt-2 model
 
 openai.api_key = webapp.config['OPENAI_KEY']
 
@@ -31,7 +32,7 @@ class Classification:
         elif model == 'One/Few-shot':
             selected_model = 'text-davinci-002'
         else:
-            selected_model = 'text-davinci-002'
+            selected_model = 'ada:ft-university-of-toronto-2022-12-03-23-52-58'
 
         self.configs = {
             "engine": selected_model,
@@ -82,6 +83,13 @@ class GPT2Classification(Classification):
         prompt=''
     ) -> None:
 
+        if model == 'Zero-shot':
+            selected_model = 'gpt2'
+        elif model == 'One/Few-shot':
+            selected_model = 'gpt2'
+        else:
+            selected_model = 'NoNameForMe/safechat-gpt2'
+
         # setup baseline model
         self.configs = {
             "temperature": temperature,
@@ -94,8 +102,8 @@ class GPT2Classification(Classification):
         }
 
         # TODO: push a finetuned gpt2 image to Huggingface and then pull it here
-        self.model_config = GPT2Config.from_pretrained('gpt2', num_labels=2, **self.configs) # Binary Classification
-        self.model = GPT2ForSequenceClassification.from_pretrained('gpt2', config=self.model_config)
+        self.model_config = GPT2Config.from_pretrained(selected_model, num_labels=2, **self.configs) # Binary Classification
+        self.model = GPT2ForSequenceClassification.from_pretrained(selected_model, config=self.model_config)
 
         self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
         self.tokenizer.padding_side = "left"
