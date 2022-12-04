@@ -105,7 +105,7 @@ class GPT2Classification(Classification):
         self.model_config = GPT2Config.from_pretrained(selected_model, num_labels=2, **self.configs) # Binary Classification
         self.model = GPT2ForSequenceClassification.from_pretrained(selected_model, config=self.model_config)
 
-        self.tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+        self.tokenizer = GPT2Tokenizer.from_pretrained(selected_model)
         self.tokenizer.padding_side = "left"
         self.tokenizer.pad_token = self.tokenizer.eos_token
 

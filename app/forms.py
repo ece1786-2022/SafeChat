@@ -38,6 +38,6 @@ class SelfHarmClassifyForm(FlaskForm):
     )
 
     # Prompt designs
-    prompt = TextAreaField('Prompt', default="Here's a text and below it I will classify it as being 'non-suicide' or 'suicide' text. The text is 'suicide' text if it expresses suicidal thoughts or includes potential suicidal actions. The text is 'non-suicide' text if it formally discusses suicide or refers to other's suicide. The text is 'non-suicide' text if it is not relevant to suicide. 'Suicide' has label 1 and 'non-suicide' has label 0.")
+    prompt = TextAreaField('Prompt', default="Here's a text and below it I will classify it as being 'non-suicide' or 'suicide' text. The text is 'suicide' text if it expresses suicidal thoughts or includes potential suicidal actions. The text is 'non-suicide' text if it formally discusses suicide or refers to other's suicide. The text is 'non-suicide' text if it is not relevant to suicide.")
     input_text = TextAreaField('Input text', validators=[DataRequired()])
     submit = SubmitField('Provide Input')
