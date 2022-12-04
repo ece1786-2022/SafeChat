@@ -167,3 +167,5 @@ datasets/
 model_finetuning/dataset/**
 model_finetuning/final_dataset_suicide_test_huggingface.csv
 model_finetuning/final_dataset_suicide_train_huggingface.csv
+model_finetuning/checkpoints/**
+model_finetuning/my_gpt2/**
