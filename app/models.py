@@ -46,8 +46,14 @@ class Classification:
         self.inputstart = "[TEXT]"
         self.outputstart = "[ANSWER]"
         self.prompt = prompt.strip()
+        self.model_type = model
 
     def ask(self, input_text: str):
+        if self.model_type in ['Zero-shot', 'One/Few-shot']:
+            return self.ask_prompt(input_text)
+        return self.ask_finetune(input_text)
+
+    def ask_prompt(self, input_text: str):
         prompt_text = f"{self.prompt}\n\n{self.inputstart}: {input_text}\n{self.outputstart}: "
         response = openai.Completion.create(
             prompt=prompt_text,
@@ -66,7 +72,7 @@ class Classification:
 
     def _compute_prob_gpt3(self, logprob: float) -> Tuple[float, float]:
         return 100 * np.e**logprob
-    
+
     def ask_finetune(self, input_text: str, finetuned_version="ada:ft-university-of-toronto-2022-12-03-23-52-58"):
         def get_gpt3_result(text):
             if "non" in text.strip() and "suicide" in text.strip():
@@ -74,7 +80,20 @@ class Classification:
             elif "suicide" in text.strip():
                 return "suicide"
             return "non-suicide"
-        return get_gpt3_result(openai.Completion.create(model=finetuned_version, prompt=input_text, max_tokens=1, temperature=0)['choices'][0]['text'])
+
+        resp = openai.Completion.create(
+            model=finetuned_version,
+            prompt=input_text + "\n\n###\n\n",
+            logprobs=1,
+            max_tokens=self.configs.get("max_tokens"),
+            temperature=self.configs.get("temperature")
+        )
+        print(f"resp: {resp}")
+        top_words = resp["choices"][0]["logprobs"]["top_logprobs"][0]
+        _, top_logprob = list(top_words.items())[0]
+        text = resp["choices"][0]["text"]
+
+        return get_gpt3_result(text), self._compute_prob_gpt3(top_logprob)
 
 
 class GPT2Classification(Classification):
@@ -136,12 +155,12 @@ class GPT2Classification(Classification):
             return "suicide", prob
         else:
             return "non-suicide", prob
-        
+
     def _compute_prob_baseline(self, logits):
         softmax = torch.nn.Softmax(dim=1)
         probs = softmax(logits)
         return torch.topk(probs, k=1)
-    
+
     def ask_finetune(self, input_text: str):
         def get_gpt2_result(output):
             if output == 0:
