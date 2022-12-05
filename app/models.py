@@ -66,6 +66,15 @@ class Classification:
 
     def _compute_prob_gpt3(self, logprob: float) -> Tuple[float, float]:
         return 100 * np.e**logprob
+    
+    def ask_finetune(self, input_text: str, finetuned_version="ada:ft-university-of-toronto-2022-12-03-23-52-58"):
+        def get_gpt3_result(text):
+            if "non" in text.strip() and "suicide" in text.strip():
+                return "non-suicide"
+            elif "suicide" in text.strip():
+                return "suicide"
+            return "non-suicide"
+        return get_gpt3_result(openai.Completion.create(model=finetuned_version, prompt=input_text, max_tokens=1, temperature=0)['choices'][0]['text'])
 
 
 class GPT2Classification(Classification):
@@ -132,3 +141,11 @@ class GPT2Classification(Classification):
         softmax = torch.nn.Softmax(dim=1)
         probs = softmax(logits)
         return torch.topk(probs, k=1)
+    
+    def ask_finetune(self, input_text: str):
+        def get_gpt2_result(output):
+            if output == 0:
+                return 'non-suicide'
+            return 'suicide'
+        inputs = self.tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=None)
+        return get_gpt2_result(self.model(**inputs)["logits"].argmax(axis=-1).item())
