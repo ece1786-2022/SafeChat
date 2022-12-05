@@ -3,14 +3,15 @@ import numpy as np
 import pandas as pd
 import openai
 from transformers import GPT2Tokenizer, GPT2ForSequenceClassification, GPT2Config
-
+from huggingface_hub import login
 
 from app import webapp
 from typing import List, Dict, Tuple
 
-# NOTE: run "huggingface-cli login" in terminal or CMD to get gpt-2 model
 
 openai.api_key = webapp.config['OPENAI_KEY']
+hugging_face_key = webapp.config['HUGGINGFACE_KEY']
+login(hugging_face_key)
 
 
 class Classification:
