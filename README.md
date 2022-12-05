@@ -27,3 +27,17 @@ This code provides the Flask application to classify whether a message has poten
 ### Local Setup
 - `python run.py`
 - Visit http://127.0.0.1:5001 on your browser.
+
+## Web App Screenshots
+
+### Navigation Page
+![Navigation Page](./screenshots/navi.png)
+
+### Zero-Shot Learning (GPT-2/3 Supported)
+![Zero-Shot Learning](./screenshots/zero_shot.png)
+
+### One/Few-Shot Learning (GPT-2/3 Supported)
+![One/Few-Shot Learning](./screenshots/few_shot.png)
+
+### Fine-Tune Model (GPT-2/3 Supported)
+![Fine-Tune Model](./screenshots/fine_tune.png)
