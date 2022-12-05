@@ -13,7 +13,7 @@ def main():
 @webapp.route('/self_harm_classification', methods=['GET', 'POST'])
 def self_harm_classification():
 
-    form = SelfHarmClassifyForm(model='Zero-shot', model_type='GPT-3')
+    form = SelfHarmClassifyForm(model='Fine-tune', model_type='GPT-3')
     if form.validate_on_submit():
         # Common model parameters
         model_type = dict(form.model_type.choices).get(form.model_type.data)

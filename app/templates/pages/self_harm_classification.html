@@ -324,6 +324,8 @@ Self-Harm Classification
                 this.captureExamples();
             } else {
                 this.switchToFineTune();
+                this.rangeTemperature.value = this.numberTemperature.value = this.formTemperature.value = 0;
+                this.rangeMaxLength.value = this.numberMaxLength.value = this.formMaxLength.value = 1;
             }
 
             if (this.formModelType.value == "GPT-3") {
@@ -410,6 +412,30 @@ Self-Harm Classification
                 that.exampleCollection.classList.add("d-none");
                 that.addExampleBtn.classList.add("d-none");
 
+                [
+                    that.rangeTopP,
+                    that.numberTopP,
+                    that.rangeFrequencyPenalty,
+                    that.numberFrequencyPenalty,
+                    that.rangePresencePenalty,
+                    that.numberPresencePenalty,
+                    that.rangeBestOf,
+                    that.numberBestOf,
+                    that.rangeNumBeams,
+                    that.numberNumBeams,
+                    that.rangeDiversityPenalty,
+                    that.numberDiversityPenalty,
+                    that.rangeRepetitionPenalty,
+                    that.numberRepetitionPenalty,
+                    that.rangeLengthPenalty,
+                    that.numberLengthPenalty,
+                    that.prompt
+                ].forEach(
+                    element => {
+                        element.disabled = false;
+                    }
+                )
+
                 that.formModel.value = "Zero-shot";
             }
 
@@ -421,6 +447,30 @@ Self-Harm Classification
                 that.exampleCollection.classList.remove("d-none");
                 that.addExampleBtn.classList.remove("d-none");
 
+                [
+                    that.rangeTopP,
+                    that.numberTopP,
+                    that.rangeFrequencyPenalty,
+                    that.numberFrequencyPenalty,
+                    that.rangePresencePenalty,
+                    that.numberPresencePenalty,
+                    that.rangeBestOf,
+                    that.numberBestOf,
+                    that.rangeNumBeams,
+                    that.numberNumBeams,
+                    that.rangeDiversityPenalty,
+                    that.numberDiversityPenalty,
+                    that.rangeRepetitionPenalty,
+                    that.numberRepetitionPenalty,
+                    that.rangeLengthPenalty,
+                    that.numberLengthPenalty,
+                    that.prompt
+                ].forEach(
+                    element => {
+                        element.disabled = false;
+                    }
+                )
+
                 that.formModel.value = "One/Few-shot";
             }
 
@@ -431,6 +481,30 @@ Self-Harm Classification
 
                 that.exampleCollection.classList.add("d-none");
                 that.addExampleBtn.classList.add("d-none");
+
+                [
+                    that.rangeTopP,
+                    that.numberTopP,
+                    that.rangeFrequencyPenalty,
+                    that.numberFrequencyPenalty,
+                    that.rangePresencePenalty,
+                    that.numberPresencePenalty,
+                    that.rangeBestOf,
+                    that.numberBestOf,
+                    that.rangeNumBeams,
+                    that.numberNumBeams,
+                    that.rangeDiversityPenalty,
+                    that.numberDiversityPenalty,
+                    that.rangeRepetitionPenalty,
+                    that.numberRepetitionPenalty,
+                    that.rangeLengthPenalty,
+                    that.numberLengthPenalty,
+                    that.prompt
+                ].forEach(
+                    element => {
+                        element.disabled = true;
+                    }
+                )
 
                 that.formModel.value = "Fine-tune";
             }
