@@ -142,8 +142,14 @@ class GPT2Classification(Classification):
         self.inputstart = "[TEXT]"
         self.outputstart = "[ANSWER]"
         self.prompt = prompt.strip()
-
+        self.model_type = model
+    
     def ask(self, input_text: str):
+        if self.model_type in ['Zero-shot', 'One/Few-shot']:
+            return self.ask_prompt(input_text)
+        return self.ask_finetune(input_text)
+
+    def ask_prompt(self, input_text: str):
         prompt_text = f"{self.prompt}\n\n{self.inputstart}: {input_text}\n{self.outputstart}: "
         inputs = self.tokenizer(prompt_text, return_tensors="pt")
         outputs = self.model(input_ids=inputs['input_ids'], attention_mask=inputs['attention_mask'])
@@ -167,4 +173,9 @@ class GPT2Classification(Classification):
                 return 'non-suicide'
             return 'suicide'
         inputs = self.tokenizer(input_text, return_tensors='pt', padding=True, truncation=True, max_length=None)
-        return get_gpt2_result(self.model(**inputs)["logits"].argmax(axis=-1).item())
+        outputs = self.model(**inputs)
+
+        logits = outputs.logits
+        probs, _ = self._compute_prob_baseline(logits)
+        prob = probs.item()
+        return get_gpt2_result(outputs["logits"].argmax(axis=-1).item()), prob * 100
