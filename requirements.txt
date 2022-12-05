@@ -6,4 +6,4 @@ openai
 Flask
 Flask-WTF
 WTForms
-
+huggingface_hub
